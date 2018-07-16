@@ -1,0 +1,6 @@
+
+structlog==16.1.0
+bs4==0.0.1
+urllib3==1.22.0
+requests==2.12.1
+requests-file==1.4.1
