@@ -13,8 +13,10 @@ def main():
         parameters = json.load(json_file)
         logger.info(parameters)
 
-        content = Scraper(config=parameters)
-        content.send_desirable_content()
+    image = os.path.join(os.getcwd(), "pngs", "small_logo.png")
+
+    content = Scraper(config=parameters, image=image)
+    content.send_desirable_content()
 
 if __name__ == '__main__':
     logging_config.configure_structlog(level='info')

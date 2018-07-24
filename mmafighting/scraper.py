@@ -5,13 +5,15 @@ from bs4 import BeautifulSoup
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 
 logger = logging.getLogger(__name__)
 
 
 class Scraper:
-    def __init__(self, config):
+    def __init__(self, config, image):
         self.config = config
+        self.image = image
         self.web_content = self.config["website"]
         self.email_content = self.config["email"]
         self.tag_list = []
@@ -46,8 +48,17 @@ class Scraper:
             msg['To'] = self.email_content["email"]
             msg['Subject'] = self.email_content["subject"]
 
-            body = "\n\n".join(match_list)
-            msg.attach(MIMEText(body, 'plain'))
+            body = MIMEText('<p><img src="cid:{image}" /></p>'.format(image=self.image), _subtype='html')
+            msg.attach(body)
+
+            fp = open(self.image, 'rb')
+            img = MIMEImage(fp.read(), 'png')
+            fp.close()
+            img.add_header('Content-Id', '<{image}>'.format(image=self.image))
+            msg.attach(img)
+
+            contents = "\n\n".join(match_list)
+            msg.attach(MIMEText(contents, 'plain'))
 
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
