@@ -35,4 +35,4 @@ COPY ./mmafighting ${HOME}
 
 WORKDIR ${HOME}
 
-#CMD ["python3", "main.py"]
+CMD ["python3", "main.py"]
